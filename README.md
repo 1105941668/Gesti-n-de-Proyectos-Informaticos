@@ -1,0 +1,2 @@
+# Gesti-n-de-Proyectos-Informaticos
+simulador
