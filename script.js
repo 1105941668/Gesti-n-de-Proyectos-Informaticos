@@ -1507,7 +1507,276 @@ const bancoPreguntas = [
     ],
     "respuesta": 0,
     "explicacion": "El project charter es el documento que autoriza formalmente la existencia de un proyecto."
-  }
+  },
+  {
+    "tipo": "multiple",
+    "pregunta": "¿Cómo influye una mala definición del alcance en el éxito de un proyecto informático?",
+    "opciones": [
+      "Reduce los costos si se omiten tareas no necesarias.",
+      "No afecta si el equipo es suficientemente experimentado.",
+      "Permite mayor flexibilidad en la planificación del cronograma.",
+      "Genera ambigüedad en entregables y retrasa decisiones clave."
+    ],
+    "respuesta": 3,
+    "explicacion": "Una mala definición del alcance genera ambigüedad en los entregables y retrasa decisiones clave del proyecto."
+  },
+  {
+    "tipo": "multiple",
+    "pregunta": "¿Cuál es un atributo esencial del ciclo de vida de un proyecto según el enfoque PMBOK?",
+    "opciones": [
+      "Consiste en una única fase que agrupa todo el trabajo.",
+      "Consta de fases secuenciales como iniciación, planificación, ejecución, seguimiento y cierre.",
+      "Solo aplica a proyectos del sector público.",
+      "Es idéntico al ciclo de vida del producto generado."
+    ],
+    "respuesta": 1,
+    "explicacion": "Según PMBOK, el ciclo de vida consta de fases secuenciales: iniciación, planificación, ejecución, seguimiento y cierre."
+  },
+  {
+    "tipo": "multiple",
+    "pregunta": "¿Cuál es una diferencia clave entre proyectos y operaciones dentro de las organizaciones?",
+    "opciones": [
+      "Las operaciones tienen un alcance limitado",
+      "Los proyectos tienen procesos repetitivos",
+      "Los proyectos son esfuerzos temporales",
+      "Las operaciones producen productos únicos"
+    ],
+    "respuesta": 2,
+    "explicacion": "La diferencia clave es que los proyectos son esfuerzos temporales, mientras que las operaciones son continuas."
+  },
+  {
+    "tipo": "multiple",
+    "pregunta": "¿Cuál es el objetivo principal de la fase de planificación en el ciclo de vida de un proyecto TI?",
+    "opciones": [
+      "Organizar y preparar los planes para ejecutar el proyecto",
+      "Establecer relaciones con los stakeholders",
+      "Cerrar contratos con proveedores",
+      "Desarrollar los entregables definidos"
+    ],
+    "respuesta": 0,
+    "explicacion": "El objetivo principal de la planificación es organizar y preparar los planes necesarios para ejecutar el proyecto."
+  },
+  {
+    "tipo": "multiple",
+    "pregunta": "¿Cuál es el propósito del Project Charter?",
+    "opciones": [
+      "Definir los entregables detallados del proyecto.",
+      "Dar al gerente del proyecto la autoridad para aplicar los recursos de la organización.",
+      "Autorizar formalmente la existencia de un proyecto.",
+      "Establecer el cronograma detallado del proyecto."
+    ],
+    "respuesta": 2,
+    "explicacion": "El Project Charter autoriza formalmente la existencia de un proyecto y documenta sus objetivos iniciales."
+  },
+  {
+    "tipo": "emparejamiento",
+    "pregunta": "Empareja los conceptos relacionados con la TIR:",
+    "pares": [
+      {
+        "izquierda": "TIR",
+        "derecha": "Tasa que iguala el valor presente de los flujos netos de efectivo al gasto inicial."
+      },
+      {
+        "izquierda": "Tasa de descuento",
+        "derecha": "Tasa mínima de rendimiento aceptada por la empresa."
+      },
+      {
+        "izquierda": "Flujos de efectivo descontados",
+        "derecha": "Flujos futuros de efectivo ajustados por la tasa de interés."
+      },
+      {
+        "izquierda": "Criterio de aceptación",
+        "derecha": "El proyecto es aceptado si la TIR es mayor que la tasa de descuento."
+      }
+    ],
+    "respuesta": 0,
+    "explicacion": "La TIR iguala el valor presente de flujos al gasto inicial; la tasa de descuento es el rendimiento mínimo aceptado."
+  },
+  {
+    "tipo": "emparejamiento",
+    "pregunta": "Empareja los grupos de procesos de gestión de proyectos con sus funciones:",
+    "pares": [
+      {
+        "izquierda": "Iniciación",
+        "derecha": "Establece los objetivos y define el alcance del proyecto."
+      },
+      {
+        "izquierda": "Planificación",
+        "derecha": "Desarrolla el plan que guiará la ejecución del proyecto."
+      },
+      {
+        "izquierda": "Ejecución",
+        "derecha": "Implementa las actividades definidas en el plan del proyecto."
+      },
+      {
+        "izquierda": "Cierre",
+        "derecha": "Formaliza la finalización y entrega del proyecto."
+      }
+    ],
+    "respuesta": 0,
+    "explicacion": "Cada grupo de procesos tiene una función específica en el ciclo de vida del proyecto."
+  },
+  {
+    "tipo": "multiple",
+    "pregunta": "Un proyecto requiere una inversión de $50,000 y genera un flujo de efectivo neto de $10,000 por año. ¿Cuál es el PRI o período de recuperación de la inversión?",
+    "opciones": [
+      "PRI = 5 años",
+      "PRI = 10 años",
+      "PRI = 3 años",
+      "PRI = 7 años"
+    ],
+    "respuesta": 0,
+    "explicacion": "PRI = Inversión inicial / Flujo de efectivo anual = $50,000 / $10,000 = 5 años."
+  },
+  {
+    "tipo": "multiple",
+    "pregunta": "¿Qué rol se espera que cumpla un gerente de proyecto según la guía PMBOK?",
+    "opciones": [
+      "Guiar al equipo para cumplir los objetivos del proyecto aplicando conocimientos, herramientas y liderazgo.",
+      "Aprobar cambios en la política organizacional.",
+      "Evaluar el desempeño financiero anual de la organización.",
+      "Decidir sobre la contratación del personal de toda la empresa."
+    ],
+    "respuesta": 0,
+    "explicacion": "Según PMBOK, el gerente debe guiar al equipo aplicando conocimientos, herramientas y habilidades de liderazgo."
+  },
+  {
+    "tipo": "multiple",
+    "pregunta": "¿Qué elemento NO debe faltar en un acta de constitución del proyecto?",
+    "opciones": [
+      "Resumen del currículo de cada miembro del equipo.",
+      "Plan de marketing del producto generado.",
+      "Identificación de los objetivos del negocio.",
+      "Horario detallado de todas las reuniones técnicas."
+    ],
+    "respuesta": 2,
+    "explicacion": "La identificación de los objetivos del negocio es un elemento esencial del acta de constitución del proyecto."
+  },
+  {
+    "tipo": "multiple",
+    "pregunta": "¿Cuál es una característica distintiva del ciclo de vida adaptativo en proyectos de TI?",
+    "opciones": [
+      "Se prohíbe cualquier cambio posterior a la planificación.",
+      "El producto final se entrega en una única fase.",
+      "No se requiere validación del cliente en cada etapa.",
+      "El alcance detallado se define en cada iteración."
+    ],
+    "respuesta": 3,
+    "explicacion": "En el ciclo de vida adaptativo, el alcance detallado se define progresivamente en cada iteración."
+  },
+  {
+    "tipo": "multiple",
+    "pregunta": "¿Cuál es una dificultad clave que enfrentan las estructuras organizacionales mixtas en proyectos?",
+    "opciones": [
+      "Falta de herramientas informáticas disponibles.",
+      "Doble reporte jerárquico que genera conflictos de autoridad.",
+      "Ausencia de gerentes de proyecto.",
+      "Exceso de control del gerente funcional sobre presupuesto."
+    ],
+    "respuesta": 1,
+    "explicacion": "Las estructuras mixtas enfrentan el desafío del doble reporte jerárquico que puede generar conflictos de autoridad."
+  },
+  {
+    "tipo": "multiple",
+    "pregunta": "¿Cuál es el principal objetivo de la gestión de las comunicaciones en un proyecto según PMBOK?",
+    "opciones": [
+      "Garantizar que la información fluya correctamente entre los interesados.",
+      "Planificar el alcance del proyecto.",
+      "Monitorear los costos.",
+      "Desarrollar el equipo del proyecto."
+    ],
+    "respuesta": 0,
+    "explicacion": "La gestión de comunicaciones busca garantizar que la información fluya adecuadamente entre todos los interesados."
+  },
+  {
+    "tipo": "multiple",
+    "pregunta": "¿Cuál es la diferencia esencial entre gestión de programas y gestión de proyectos?",
+    "opciones": [
+      "Los programas no tienen entregables.",
+      "La gestión de programas tiene menor presupuesto que los proyectos.",
+      "Un programa solo puede contener proyectos idénticos.",
+      "La gestión de programas coordina múltiples proyectos relacionados para obtener beneficios estratégicos."
+    ],
+    "respuesta": 3,
+    "explicacion": "La gestión de programas coordina múltiples proyectos relacionados para obtener beneficios estratégicos y sinergias."
+  },
+  {
+    "tipo": "multiple_seleccion",
+    "pregunta": "¿Cuáles de los siguientes son beneficios del proyecto que deben incluirse en el Project Charter?",
+    "opciones": [
+      "Mejora de la eficiencia operativa.",
+      "Aumento en la satisfacción del cliente.",
+      "Detalles técnicos del producto.",
+      "Listado de actividades operativas."
+    ],
+    "respuestas_correctas": [0, 1],
+    "explicacion": "Los beneficios como mejora de eficiencia operativa y aumento en satisfacción del cliente deben incluirse en el Project Charter."
+  },
+  {
+    "tipo": "multiple",
+    "pregunta": "¿Cuál de los siguientes es un método utilizado para distribuir información en proyectos informáticos?",
+    "opciones": [
+      "Reuniones del proyecto.",
+      "Análisis de riesgos.",
+      "Diagrama de Gantt.",
+      "Control de calidad."
+    ],
+    "respuesta": 0,
+    "explicacion": "Las reuniones del proyecto son un método efectivo para distribuir información entre los interesados."
+  },
+  {
+    "tipo": "multiple_seleccion",
+    "pregunta": "¿Cuáles son las mejores prácticas para asegurar una comunicación efectiva durante la ejecución de un proyecto?",
+    "opciones": [
+      "Realizar reuniones periódicas de equipo",
+      "Asignar los entregables",
+      "Establecer canales de comunicación claros",
+      "Definir el plan de comunicación"
+    ],
+    "respuestas_correctas": [0, 2],
+    "explicacion": "Realizar reuniones periódicas y establecer canales claros son prácticas clave para una comunicación efectiva."
+  },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+  {
+    "tipo": "multiple",
+    "pregunta": "¿Qué factor puede afectar la adquisición del equipo de trabajo en un proyecto?",
+    "opciones": [
+      "Planificación del alcance.",
+      "Disponibilidad de los recursos humanos.",
+      "Costos de adquisición.",
+      "Evaluación de riesgos."
+    ],
+    "respuesta": 1,
+    "explicacion": "La disponibilidad de los recursos humanos es un factor crítico que puede afectar la adquisición del equipo de trabajo."
+  },
+  {
+    "tipo": "multiple_seleccion",
+    "pregunta": "¿Cuál de las siguientes razones corresponden a proyectos terminados normalmente?",
+    "opciones": [
+      "Verse obligado a completar un proyecto antes de tiempo.",
+      "Cumplen dentro de los objetivos, costo, calidad y cronograma.",
+      "Cambio en las prioridades.",
+      "Varios aspectos: atención a las personas, procesos o tecnologías.",
+      "Proyectos que no tiene éxito esperado.",
+      "Proyectos nunca pareces terminar.",
+      "Proyecto completa sus resultados según lo planificado."
+    ],
+    "respuestas_correctas": [1, 6],
+    "explicacion": "Los proyectos terminados normalmente cumplen objetivos dentro de parámetros establecidos y completan sus resultados según lo planificado."
+  },
+  {
+  "tipo": "ordenamiento",
+  "pregunta": "A partir del siguiente listado, ordenen los pasos del proceso para el control integrado de cambio de un proyecto:",
+  "items": [
+    "Búsqueda de alternativas",
+    "Ajuste del plan de dirección y de líneas base",
+    "Aprobación por parte del CCB",
+    "Gestionar el proyecto de acuerdo al nuevo plan",
+    "Evaluación del impacto",
+    "Notificación a los interesados del cambio e impacto"
+  ],
+  "orden_correcto": [4, 0, 2, 1, 5, 3],
+  "explicacion": "El orden correcto es: Evaluación del impacto, Búsqueda de alternativas, Aprobación por CCB, Ajuste del plan, Notificación a interesados, Gestionar según nuevo plan."
+}
 ];
 
 // VARIABLES GLOBALES
@@ -1695,6 +1964,8 @@ function cargarPreguntaMultiple(pregunta, cont) {
 
 // === 11. CARGAR PREGUNTA SELECCIÓN MÚLTIPLE ===
 function cargarPreguntaSeleccionMultiple(pregunta, cont) {
+    const isStudyMode = document.getElementById('mode-select').value === 'study';
+    
     pregunta.opciones.forEach((opcion, index) => {
         const div = document.createElement('div');
         div.className = 'checkbox-option';
@@ -1716,7 +1987,11 @@ function cargarPreguntaSeleccionMultiple(pregunta, cont) {
             }
             
             if (seleccionesTemporales.length > 0) {
-                btnNextQuestion.classList.remove('hidden');
+                if (isStudyMode) {
+                    // En modo estudio, no mostrar botón hasta que confirme
+                } else {
+                    btnNextQuestion.classList.remove('hidden');
+                }
             } else {
                 btnNextQuestion.classList.add('hidden');
             }
@@ -1724,10 +1999,27 @@ function cargarPreguntaSeleccionMultiple(pregunta, cont) {
         
         cont.appendChild(div);
     });
+    
+    // Agregar botón de confirmar solo en modo estudio
+    if (isStudyMode) {
+        const btnConfirmar = document.createElement('button');
+        btnConfirmar.className = 'btn-primary';
+        btnConfirmar.style.marginTop = '15px';
+        btnConfirmar.innerHTML = 'Confirmar Respuesta';
+        btnConfirmar.onclick = () => {
+            if (seleccionesTemporales.length > 0) {
+                btnConfirmar.style.display = 'none';
+                mostrarResultadoInmediatoSeleccionMultiple();
+            }
+        };
+        cont.appendChild(btnConfirmar);
+    }
 }
 
 // === 12. CARGAR PREGUNTA EMPAREJAMIENTO ===
 function cargarPreguntaEmparejamiento(pregunta, cont) {
+    const isStudyMode = document.getElementById('mode-select').value === 'study';
+    
     const matchingDiv = document.createElement('div');
     matchingDiv.className = 'matching-container';
     
@@ -1744,7 +2036,9 @@ function cargarPreguntaEmparejamiento(pregunta, cont) {
             select.innerHTML += `<option value="${idx}">${derecha}</option>`;
         });
         
-        select.addEventListener('change', verificarEmparejamientoCompleto);
+        select.addEventListener('change', () => {
+            verificarEmparejamientoCompleto(isStudyMode);
+        });
         
         pairDiv.innerHTML = `
             <div class="matching-left">${par.izquierda}</div>
@@ -1757,9 +2051,24 @@ function cargarPreguntaEmparejamiento(pregunta, cont) {
     });
     
     cont.appendChild(matchingDiv);
+    
+    // Agregar botón de confirmar solo en modo estudio
+    if (isStudyMode) {
+        const btnConfirmar = document.createElement('button');
+        btnConfirmar.className = 'btn-primary';
+        btnConfirmar.id = 'btn-confirmar-emparejamiento';
+        btnConfirmar.style.marginTop = '15px';
+        btnConfirmar.style.display = 'none';
+        btnConfirmar.innerHTML = 'Confirmar Respuesta';
+        btnConfirmar.onclick = () => {
+            btnConfirmar.style.display = 'none';
+            mostrarResultadoInmediatoEmparejamiento();
+        };
+        cont.appendChild(btnConfirmar);
+    }
 }
 
-function verificarEmparejamientoCompleto() {
+function verificarEmparejamientoCompleto(isStudyMode = false) {
     const pregunta = preguntasExamen[indiceActual];
     const selects = document.querySelectorAll('[id^="match-"]');
     let todosCompletos = true;
@@ -1769,9 +2078,19 @@ function verificarEmparejamientoCompleto() {
     });
     
     if (todosCompletos) {
-        btnNextQuestion.classList.remove('hidden');
+        if (isStudyMode) {
+            const btnConfirmar = document.getElementById('btn-confirmar-emparejamiento');
+            if (btnConfirmar) btnConfirmar.style.display = 'block';
+        } else {
+            btnNextQuestion.classList.remove('hidden');
+        }
     } else {
-        btnNextQuestion.classList.add('hidden');
+        if (isStudyMode) {
+            const btnConfirmar = document.getElementById('btn-confirmar-emparejamiento');
+            if (btnConfirmar) btnConfirmar.style.display = 'none';
+        } else {
+            btnNextQuestion.classList.add('hidden');
+        }
     }
 }
 
@@ -1789,14 +2108,14 @@ function seleccionarOpcion(index, btnClickeado) {
     btnClickeado.classList.add('option-selected');
     
     if (isStudyMode) {
-        mostrarResultadoInmediato(index);
+        mostrarResultadoInmediatoMultiple(index);
     } else {
         btnNextQuestion.classList.remove('hidden');
     }
 }
 
 // === 14. MOSTRAR RESULTADO INMEDIATO (MODO ESTUDIO) ===
-function mostrarResultadoInmediato(seleccionada) {
+function mostrarResultadoInmediatoMultiple(seleccionada) {
     const pregunta = preguntasExamen[indiceActual];
     const correcta = pregunta.respuesta;
     const cont = document.getElementById('options-container');
@@ -1823,28 +2142,128 @@ function mostrarResultadoInmediato(seleccionada) {
     btnNextQuestion.classList.remove('hidden');
 }
 
+function mostrarResultadoInmediatoSeleccionMultiple() {
+    const pregunta = preguntasExamen[indiceActual];
+    const correctas = pregunta.respuestas_correctas || [];
+    const cont = document.getElementById('options-container');
+    const checkboxOptions = cont.querySelectorAll('.checkbox-option');
+    
+    // Deshabilitar todos los checkboxes
+    checkboxOptions.forEach(opt => {
+        const checkbox = opt.querySelector('input[type="checkbox"]');
+        checkbox.disabled = true;
+        opt.style.cursor = 'default';
+    });
+
+    // Aplicar feedback visual
+    checkboxOptions.forEach((opt, index) => {
+        const checkbox = opt.querySelector('input[type="checkbox"]');
+        const esCorrecta = correctas.includes(index);
+        const fueSeleccionada = checkbox.checked;
+        
+        opt.classList.remove('selected');
+        
+        if (esCorrecta && fueSeleccionada) {
+            opt.classList.add('ans-correct', 'feedback-visible');
+        } else if (esCorrecta && !fueSeleccionada) {
+            opt.classList.add('ans-correct');
+            opt.style.opacity = '0.7';
+        } else if (!esCorrecta && fueSeleccionada) {
+            opt.classList.add('ans-wrong', 'feedback-visible');
+        }
+    });
+
+    const divExplicacion = document.createElement('div');
+    divExplicacion.className = 'explanation-feedback';
+    divExplicacion.innerHTML = `<strong>Explicación:</strong> ${pregunta.explicacion}`;
+    cont.appendChild(divExplicacion);
+    
+    respuestasUsuario.push([...seleccionesTemporales]);
+    btnNextQuestion.classList.remove('hidden');
+}
+
+function mostrarResultadoInmediatoEmparejamiento() {
+    const pregunta = preguntasExamen[indiceActual];
+    const cont = document.getElementById('options-container');
+    const matchingPairs = cont.querySelectorAll('.matching-pair');
+    const derechas = pregunta.pares.map(p => p.derecha);
+    
+    // Deshabilitar todos los selects
+    matchingPairs.forEach((pair, idx) => {
+        const select = pair.querySelector('select');
+        select.disabled = true;
+    });
+
+    // Verificar y mostrar feedback
+    let todoCorrecto = true;
+    const respuestaEmparejamiento = [];
+    
+    matchingPairs.forEach((pair, idx) => {
+        const select = pair.querySelector('select');
+        const valorSeleccionado = parseInt(select.value);
+        respuestaEmparejamiento.push(valorSeleccionado);
+        
+        const respuestaCorrecta = pregunta.pares[idx].derecha;
+        const respuestaUsuario = derechas[valorSeleccionado];
+        
+        if (respuestaUsuario === respuestaCorrecta) {
+            pair.classList.add('ans-correct');
+            pair.style.backgroundColor = '#e6f4ea';
+        } else {
+            pair.classList.add('ans-wrong');
+            pair.style.backgroundColor = '#fce8e6';
+            todoCorrecto = false;
+            
+            // Mostrar la respuesta correcta
+            const correctoDiv = document.createElement('div');
+            correctoDiv.style.cssText = 'padding: 8px; margin-top: 5px; background: #e6f4ea; border-radius: 6px; font-size: 0.85rem; color: #137333;';
+            correctoDiv.innerHTML = `✓ Correcto: <strong>${respuestaCorrecta}</strong>`;
+            pair.appendChild(correctoDiv);
+        }
+    });
+
+    const divExplicacion = document.createElement('div');
+    divExplicacion.className = 'explanation-feedback';
+    divExplicacion.innerHTML = `<strong>Explicación:</strong> ${pregunta.explicacion}`;
+    cont.appendChild(divExplicacion);
+    
+    respuestasUsuario.push(respuestaEmparejamiento);
+    btnNextQuestion.classList.remove('hidden');
+}
+
 // === 15. BOTÓN SIGUIENTE ===
 btnNextQuestion.addEventListener('click', () => {
     const isStudyMode = document.getElementById('mode-select').value === 'study';
     const pregunta = preguntasExamen[indiceActual];
     
+    // En modo estudio para pregunta múltiple, ya se registró la respuesta
     if (isStudyMode && pregunta.tipo === 'multiple' && seleccionTemporal !== null) {
         indiceActual++;
         cargarPregunta();
         return;
     }
     
-    if (pregunta.tipo === 'multiple_seleccion') {
-        respuestasUsuario.push([...seleccionesTemporales]);
-    } else if (pregunta.tipo === 'emparejamiento') {
-        const respuestaEmparejamiento = [];
-        pregunta.pares.forEach((par, idx) => {
-            const select = document.getElementById(`match-${idx}`);
-            respuestaEmparejamiento.push(parseInt(select.value));
-        });
-        respuestasUsuario.push(respuestaEmparejamiento);
-    } else if (pregunta.tipo === 'multiple' && seleccionTemporal !== null) {
-        respuestasUsuario.push(seleccionTemporal);
+    // En modo estudio para selección múltiple y emparejamiento, ya se registró la respuesta
+    if (isStudyMode && (pregunta.tipo === 'multiple_seleccion' || pregunta.tipo === 'emparejamiento')) {
+        indiceActual++;
+        cargarPregunta();
+        return;
+    }
+    
+    // Modo examen - registrar respuestas
+    if (!isStudyMode) {
+        if (pregunta.tipo === 'multiple_seleccion') {
+            respuestasUsuario.push([...seleccionesTemporales]);
+        } else if (pregunta.tipo === 'emparejamiento') {
+            const respuestaEmparejamiento = [];
+            pregunta.pares.forEach((par, idx) => {
+                const select = document.getElementById(`match-${idx}`);
+                respuestaEmparejamiento.push(parseInt(select.value));
+            });
+            respuestasUsuario.push(respuestaEmparejamiento);
+        } else if (pregunta.tipo === 'multiple' && seleccionTemporal !== null) {
+            respuestasUsuario.push(seleccionTemporal);
+        }
     }
     
     indiceActual++;
