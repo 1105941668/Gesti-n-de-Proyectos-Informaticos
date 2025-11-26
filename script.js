@@ -2005,6 +2005,7 @@ function cargarPreguntaSeleccionMultiple(pregunta, cont) {
         const btnConfirmar = document.createElement('button');
         btnConfirmar.className = 'btn-primary';
         btnConfirmar.style.marginTop = '15px';
+        btnConfirmar.style.color = 'black';
         btnConfirmar.innerHTML = 'Confirmar Respuesta';
         btnConfirmar.onclick = () => {
             if (seleccionesTemporales.length > 0) {
