@@ -4,12 +4,13 @@ import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/fireb
 
 // === 1. CONFIGURACIÓN FIREBASE ===
 const firebaseConfig = {
-  apiKey: "AIzaSyAs_LBouq2njfy0cJHJjuiUfASC3RqVKkM",
-  authDomain: "practicas-comunitario.firebaseapp.com",
-  projectId: "practicas-comunitario",
-  storageBucket: "practicas-comunitario.firebasestorage.app",
-  messagingSenderId: "874017448238",
-  appId: "1:874017448238:web:03928054e98441838d1abf"
+  apiKey: "AIzaSyDdKyFcivRj_wFz5HaPytv_Zb4gVbbD0vE",
+  authDomain: "gestioninformaticos-d40ae.firebaseapp.com",
+  projectId: "gestioninformaticos-d40ae",
+  storageBucket: "gestioninformaticos-d40ae.firebasestorage.app",
+  messagingSenderId: "859002239168",
+  appId: "1:859002239168:web:6967e9f53c07afbb89d525",
+  measurementId: "G-6RYSJ1Q0BQ"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -26,7 +27,7 @@ const correosDosDispositivos = [
 const correosUnDispositivo = [
     "cnavarretem4@unemi.edu.ec", "gorellanas2@unemi.edu.ec", "ehidalgoc4@unemi.edu.ec", 
     "lbrionesg3@unemi.edu.ec", "xsalvadorv@unemi.edu.ec", "nbravop4@unemi.edu.ec", 
-    "jmoreirap6@unemi.edu.ec", "jcastrof8@unemi.edu.ec"
+    "jmoreirap6@unemi.edu.ec", "jcastrof8@unemi.edu.ec", "csanchezl3@unemi.edu.ec"
 ];
 
 const correosPermitidos = [...correosDosDispositivos, ...correosUnDispositivo];
