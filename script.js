@@ -4265,9 +4265,9 @@ async function guardarProgreso() {
         modo: modo,
         tiempo: tiempo,
         tiempoRestante: tiempoRestante,
-        preguntasExamen: preguntasExamen,
+        preguntasExamen: JSON.stringify(preguntasExamen),
         indiceActual: indiceActual,
-        respuestasUsuario: respuestasUsuario,
+        respuestasUsuario: JSON.stringify(respuestasUsuario),
         fecha: new Date().toISOString(),
         ultimaActualizacion: serverTimestamp()
     };
@@ -4279,7 +4279,11 @@ async function guardarProgreso() {
         
         // También guardar en localStorage como respaldo
         const key = `progreso_${modo}_${email}`;
-        localStorage.setItem(key, JSON.stringify(progreso));
+        localStorage.setItem(key, JSON.stringify({
+            ...progreso,
+            preguntasExamen: preguntasExamen,
+            respuestasUsuario: respuestasUsuario
+        }));
         
         mostrarNotificacion('✅ Progreso guardado exitosamente', 'success');
         console.log('📝 Progreso guardado en Firebase y localStorage');
@@ -4302,6 +4306,8 @@ async function cargarProgreso() {
         
         if (docSnap.exists()) {
             datos = docSnap.data();
+            datos.preguntasExamen = JSON.parse(datos.preguntasExamen);
+            datos.respuestasUsuario = JSON.parse(datos.respuestasUsuario);
             console.log('📂 Progreso cargado desde Firebase');
         } else {
             // Si no está en Firebase, intentar desde localStorage
