@@ -3479,7 +3479,8 @@ function cargarPregunta() {
     const tiposTexto = {
         'multiple': '📝 Opción Múltiple',
         'multiple_seleccion': '☑️ Selección Múltiple',
-        'emparejamiento': '🔗 Emparejamiento'
+        'emparejamiento': '🔗 Emparejamiento',
+        'ordenamiento': '🔢 Ordenamiento'
     };
     badge.textContent = tiposTexto[tipo] || tipo;
     
@@ -3493,7 +3494,9 @@ function cargarPregunta() {
         cargarPreguntaSeleccionMultiple(pregunta, cont);
     } else if (tipo === 'emparejamiento') {
         cargarPreguntaEmparejamiento(pregunta, cont);
-    }
+    } else if (tipo === 'ordenamiento') {  // ✅ AGREGAR ESTA LÍNEA
+    cargarPreguntaOrdenamiento(pregunta, cont);
+    } 
     
     document.getElementById('progress-display').innerText = `Pregunta ${indiceActual + 1} de ${preguntasExamen.length}`;
 
@@ -3622,6 +3625,7 @@ function cargarPreguntaEmparejamiento(pregunta, cont) {
         btnConfirmar.id = 'btn-confirmar-emparejamiento';
         btnConfirmar.style.marginTop = '15px';
         btnConfirmar.style.display = 'none';
+        btnConfirmar.style.color = '#000';
         btnConfirmar.innerHTML = 'Confirmar Respuesta';
         btnConfirmar.onclick = () => {
             btnConfirmar.style.display = 'none';
@@ -3717,6 +3721,174 @@ function validarRespuestaEmparejamiento() {
     
     // Registrar respuesta
     respuestasUsuario.push(correcto ? 'correcta' : 'incorrecta');
+    
+    // Mostrar botón siguiente
+    btnNextQuestion.classList.remove('hidden');
+}
+
+// === CARGAR PREGUNTA ORDENAMIENTO ===
+function cargarPreguntaOrdenamiento(pregunta, cont) {
+    const isStudyMode = document.getElementById('mode-select').value === 'study';
+    
+    const orderingDiv = document.createElement('div');
+    orderingDiv.className = 'ordering-container';
+    orderingDiv.id = 'ordering-container';
+    
+    // Mezclar los items aleatoriamente
+    const itemsMezclados = pregunta.items.map((item, idx) => ({ 
+        texto: item, 
+        indiceOriginal: idx 
+    })).sort(() => 0.5 - Math.random());
+    
+    itemsMezclados.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'ordering-item';
+        itemDiv.draggable = true;
+        itemDiv.dataset.indiceOriginal = item.indiceOriginal;
+        itemDiv.dataset.posicionActual = index;
+        
+        itemDiv.innerHTML = `
+            <div class="ordering-number">${index + 1}</div>
+            <div class="ordering-text">${item.texto}</div>
+            <div class="ordering-handle">⋮⋮</div>
+        `;
+        
+        // Eventos de arrastre
+        itemDiv.addEventListener('dragstart', handleDragStart);
+        itemDiv.addEventListener('dragover', handleDragOver);
+        itemDiv.addEventListener('drop', handleDrop);
+        itemDiv.addEventListener('dragend', handleDragEnd);
+        
+        orderingDiv.appendChild(itemDiv);
+    });
+    
+    cont.appendChild(orderingDiv);
+    
+    // Agregar botón de confirmar en modo estudio
+    if (isStudyMode) {
+        const btnConfirmar = document.createElement('button');
+        btnConfirmar.className = 'btn-primary';
+        btnConfirmar.id = 'btn-confirmar-ordenamiento';
+        btnConfirmar.style.marginTop = '15px';
+        btnConfirmar.innerHTML = 'Confirmar Orden';
+        btnConfirmar.onclick = () => {
+            btnConfirmar.style.display = 'none';
+            validarRespuestaOrdenamiento();
+        };
+        cont.appendChild(btnConfirmar);
+    } else {
+        // En modo examen, mostrar el botón siguiente automáticamente
+        btnNextQuestion.classList.remove('hidden');
+    }
+}
+
+// Variables para el drag and drop
+let draggedElement = null;
+
+function handleDragStart(e) {
+    draggedElement = this;
+    this.style.opacity = '0.5';
+    e.dataTransfer.effectAllowed = 'move';
+}
+
+function handleDragOver(e) {
+    if (e.preventDefault) {
+        e.preventDefault();
+    }
+    e.dataTransfer.dropEffect = 'move';
+    return false;
+}
+
+function handleDrop(e) {
+    if (e.stopPropagation) {
+        e.stopPropagation();
+    }
+    
+    if (draggedElement !== this) {
+        const container = document.getElementById('ordering-container');
+        const items = Array.from(container.children);
+        const draggedIndex = items.indexOf(draggedElement);
+        const targetIndex = items.indexOf(this);
+        
+        if (draggedIndex < targetIndex) {
+            this.parentNode.insertBefore(draggedElement, this.nextSibling);
+        } else {
+            this.parentNode.insertBefore(draggedElement, this);
+        }
+        
+        // Actualizar números
+        actualizarNumerosOrdenamiento();
+    }
+    
+    return false;
+}
+
+function handleDragEnd(e) {
+    this.style.opacity = '1';
+    
+    const items = document.querySelectorAll('.ordering-item');
+    items.forEach(item => {
+        item.classList.remove('over');
+    });
+}
+
+function actualizarNumerosOrdenamiento() {
+    const items = document.querySelectorAll('.ordering-item');
+    items.forEach((item, index) => {
+        const numberDiv = item.querySelector('.ordering-number');
+        numberDiv.textContent = index + 1;
+        item.dataset.posicionActual = index;
+    });
+}
+
+function validarRespuestaOrdenamiento() {
+    const pregunta = preguntasExamen[indiceActual];
+    const items = document.querySelectorAll('.ordering-item');
+    const ordenUsuario = Array.from(items).map(item => parseInt(item.dataset.indiceOriginal));
+    const ordenCorrecto = pregunta.orden_correcto;
+    
+    let correcto = JSON.stringify(ordenUsuario) === JSON.stringify(ordenCorrecto);
+    
+    // Deshabilitar arrastre
+    items.forEach((item, index) => {
+        item.draggable = false;
+        item.style.cursor = 'default';
+        
+        const posicionCorrecta = ordenCorrecto.indexOf(parseInt(item.dataset.indiceOriginal));
+        
+        if (posicionCorrecta === index) {
+            item.classList.add('correct');
+            item.style.backgroundColor = '#e6f4ea';
+            item.style.borderLeft = '4px solid #28a745';
+        } else {
+            item.classList.add('incorrect');
+            item.style.backgroundColor = '#fce8e6';
+            item.style.borderLeft = '4px solid #dc3545';
+            
+            // Mostrar posición correcta
+            const correctDiv = document.createElement('div');
+            correctDiv.style.cssText = 'padding: 5px 10px; margin-top: 5px; background: #d4edda; border-radius: 4px; font-size: 0.85em; color: #155724;';
+            correctDiv.textContent = `✓ Posición correcta: ${posicionCorrecta + 1}`;
+            item.appendChild(correctDiv);
+        }
+    });
+    
+    // Mostrar feedback general
+    const feedback = document.createElement('div');
+    feedback.className = `feedback-box ${correcto ? 'correct' : 'incorrect'}`;
+    feedback.style.cssText = 'margin-top: 20px; padding: 15px; border-radius: 8px;';
+    feedback.style.backgroundColor = correcto ? '#d4edda' : '#f8d7da';
+    feedback.style.border = correcto ? '2px solid #28a745' : '2px solid #dc3545';
+    feedback.innerHTML = `
+        <strong>${correcto ? '¡Correcto!' : 'Incorrecto'}</strong>
+        <p>${pregunta.explicacion || ''}</p>
+    `;
+    
+    const cont = document.getElementById('options-container');
+    cont.appendChild(feedback);
+    
+    // Registrar respuesta
+    respuestasUsuario.push(ordenUsuario);
     
     // Mostrar botón siguiente
     btnNextQuestion.classList.remove('hidden');
@@ -3830,6 +4002,7 @@ btnNextQuestion.addEventListener('click', () => {
     }
     
     // Modo examen - registrar respuestas
+    // En la función del evento btnNextQuestion, agregar en la sección de modo examen:
     if (!isStudyMode) {
         if (pregunta.tipo === 'multiple_seleccion') {
             respuestasUsuario.push([...seleccionesTemporales]);
@@ -3843,6 +4016,10 @@ btnNextQuestion.addEventListener('click', () => {
                 respuestaEmparejamiento.push(indiceValor);
             });
             respuestasUsuario.push(respuestaEmparejamiento);
+        } else if (pregunta.tipo === 'ordenamiento') {  // ✅ AGREGAR ESTO
+            const items = document.querySelectorAll('.ordering-item');
+            const ordenUsuario = Array.from(items).map(item => parseInt(item.dataset.indiceOriginal));
+            respuestasUsuario.push(ordenUsuario);
         } else if (pregunta.tipo === 'multiple' && seleccionTemporal !== null) {
             respuestasUsuario.push(seleccionTemporal);
         }
@@ -3869,7 +4046,6 @@ function iniciarReloj() {
 function terminarQuiz() {
     clearInterval(intervaloTiempo);
     let aciertos = 0;
-    
     preguntasExamen.forEach((p, i) => {
         if (p.tipo === 'multiple') {
             if (respuestasUsuario[i] === p.respuesta) aciertos++;
@@ -3889,6 +4065,11 @@ function terminarQuiz() {
                 }
             });
             if (correcto) aciertos++;
+        } else if (p.tipo === 'ordenamiento') {  // ✅ AGREGAR ESTO
+            const respUsuario = respuestasUsuario[i] || [];
+            if (JSON.stringify(respUsuario) === JSON.stringify(p.orden_correcto)) {
+                aciertos++;
+            }
         }
     });
     
@@ -3918,7 +4099,8 @@ document.getElementById('btn-review').addEventListener('click', () => {
         const tiposTexto = {
             'multiple': '📝 Opción Múltiple',
             'multiple_seleccion': '☑️ Selección Múltiple',
-            'emparejamiento': '🔗 Emparejamiento'
+            'emparejamiento': '🔗 Emparejamiento',
+            'ordenamiento': '🔢 Ordenamiento'  // ✅ AGREGAR
         };
         
         let contenido = `
@@ -3983,6 +4165,45 @@ document.getElementById('btn-review').addEventListener('click', () => {
                     contenido += `<div style="padding: 5px 10px; font-size: 0.8rem; color: #28a745;">✓ Correcto: ${par.derecha}</div>`;
                 }
             });
+            contenido += '</div>';
+        } else if (p.tipo === 'ordenamiento') {  // ✅ AGREGAR TODA ESTA SECCIÓN
+            const respUsuario = respuestasUsuario[i] || [];
+            const ordenCorrecto = p.orden_correcto;
+            
+            contenido += '<div class="review-ordering">';
+            contenido += '<div style="font-weight: 600; margin-bottom: 10px; color: #555;">Tu orden:</div>';
+            
+            respUsuario.forEach((indiceItem, posicion) => {
+                const texto = p.items[indiceItem];
+                const posicionCorrecta = ordenCorrecto.indexOf(indiceItem);
+                const esCorrecta = posicionCorrecta === posicion;
+                const clase = esCorrecta ? 'ans-correct' : 'ans-wrong';
+                const ico = esCorrecta ? '✅' : '❌';
+                
+                contenido += `
+                    <div class="review-ordering-item ${clase}">
+                        <div class="review-ordering-number">${posicion + 1}</div>
+                        <div class="review-ordering-text">${ico} ${texto}</div>
+                    </div>
+                `;
+                
+                if (!esCorrecta) {
+                    contenido += `<div style="padding: 5px 15px; font-size: 0.8rem; color: #28a745; margin-bottom: 8px;">✓ Posición correcta: ${posicionCorrecta + 1}</div>`;
+                }
+            });
+            
+            // Mostrar orden correcto
+            contenido += '<div style="font-weight: 600; margin-top: 15px; margin-bottom: 10px; color: #555; border-top: 1px solid #ddd; padding-top: 15px;">Orden correcto:</div>';
+            ordenCorrecto.forEach((indiceItem, posicion) => {
+                const texto = p.items[indiceItem];
+                contenido += `
+                    <div class="review-ordering-item ans-correct" style="opacity: 0.8;">
+                        <div class="review-ordering-number">${posicion + 1}</div>
+                        <div class="review-ordering-text">${texto}</div>
+                    </div>
+                `;
+            });
+            
             contenido += '</div>';
         }
         
