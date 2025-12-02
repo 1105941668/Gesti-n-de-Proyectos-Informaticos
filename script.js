@@ -3540,12 +3540,18 @@ function cargarPreguntaSeleccionMultiple(pregunta, cont) {
             
             if (seleccionesTemporales.length > 0) {
                 if (isStudyMode) {
-                    // En modo estudio, no mostrar botón hasta que confirme
+                    const btnConfirmar = document.querySelector('.btn-confirmar-multiple');
+                    if (btnConfirmar) btnConfirmar.style.display = 'block';
                 } else {
                     btnNextQuestion.classList.remove('hidden');
                 }
             } else {
-                btnNextQuestion.classList.add('hidden');
+                if (isStudyMode) {
+                    const btnConfirmar = document.querySelector('.btn-confirmar-multiple');
+                    if (btnConfirmar) btnConfirmar.style.display = 'none';
+                } else {
+                    btnNextQuestion.classList.add('hidden');
+                }
             }
         });
         
@@ -3555,9 +3561,10 @@ function cargarPreguntaSeleccionMultiple(pregunta, cont) {
     // Agregar botón de confirmar solo en modo estudio
     if (isStudyMode) {
         const btnConfirmar = document.createElement('button');
-        btnConfirmar.className = 'btn-primary';
+        btnConfirmar.className = 'btn-primary btn-confirmar-multiple';
         btnConfirmar.style.marginTop = '15px';
         btnConfirmar.style.color = '#000';
+        btnConfirmar.style.display = 'none';
         btnConfirmar.innerHTML = 'Confirmar Respuesta';
         btnConfirmar.onclick = () => {
             if (seleccionesTemporales.length > 0) {
@@ -3618,7 +3625,7 @@ function cargarPreguntaEmparejamiento(pregunta, cont) {
         btnConfirmar.innerHTML = 'Confirmar Respuesta';
         btnConfirmar.onclick = () => {
             btnConfirmar.style.display = 'none';
-            validarRespuestaEmparejamiento(); // ✅ NUEVO NOMBRE
+            validarRespuestaEmparejamiento();
         };
         cont.appendChild(btnConfirmar);
     }
@@ -3666,7 +3673,7 @@ function verificarEmparejamiento() {
     return todasCorrectas;
 }
 
-// ✅ NUEVO NOMBRE - Función para mostrar resultado inmediato (modo estudio)
+// ✅ Función para mostrar resultado inmediato de emparejamiento (modo estudio)
 function validarRespuestaEmparejamiento() {
     const selects = document.querySelectorAll('[id^="match-"]');
     const correcto = verificarEmparejamiento();
@@ -3679,11 +3686,17 @@ function validarRespuestaEmparejamiento() {
         
         if (select.value === correcta) {
             pairDiv.classList.add('correct');
+            pairDiv.style.backgroundColor = '#e6f4ea';
         } else {
             pairDiv.classList.add('incorrect');
+            pairDiv.style.backgroundColor = '#fce8e6';
             // Mostrar la respuesta correcta
             const rightDiv = pairDiv.querySelector('.matching-right');
-            rightDiv.innerHTML += `<div class="correct-answer">Correcta: ${correcta}</div>`;
+            const correctDiv = document.createElement('div');
+            correctDiv.className = 'correct-answer';
+            correctDiv.style.cssText = 'margin-top: 8px; padding: 8px; background-color: #d4edda; border-radius: 4px; font-size: 0.9em; color: #155724;';
+            correctDiv.textContent = `✓ Correcta: ${correcta}`;
+            rightDiv.appendChild(correctDiv);
         }
     });
     
@@ -3691,13 +3704,19 @@ function validarRespuestaEmparejamiento() {
     const pregunta = preguntasExamen[indiceActual];
     const feedback = document.createElement('div');
     feedback.className = `feedback-box ${correcto ? 'correct' : 'incorrect'}`;
+    feedback.style.cssText = 'margin-top: 20px; padding: 15px; border-radius: 8px;';
+    feedback.style.backgroundColor = correcto ? '#d4edda' : '#f8d7da';
+    feedback.style.border = correcto ? '2px solid #28a745' : '2px solid #dc3545';
     feedback.innerHTML = `
         <strong>${correcto ? '¡Correcto!' : 'Incorrecto'}</strong>
         <p>${pregunta.explicacion || ''}</p>
     `;
     
-    const cont = document.getElementById('pregunta-contenedor');
+    const cont = document.getElementById('options-container');
     cont.appendChild(feedback);
+    
+    // Registrar respuesta
+    respuestasUsuario.push(correcto ? 'correcta' : 'incorrecta');
     
     // Mostrar botón siguiente
     btnNextQuestion.classList.remove('hidden');
@@ -3791,55 +3810,6 @@ function mostrarResultadoInmediatoSeleccionMultiple() {
     btnNextQuestion.classList.remove('hidden');
 }
 
-function mostrarResultadoInmediatoEmparejamiento() {
-    const pregunta = preguntasExamen[indiceActual];
-    const cont = document.getElementById('options-container');
-    const matchingPairs = cont.querySelectorAll('.matching-pair');
-    const derechas = pregunta.pares.map(p => p.derecha);
-    
-    // Deshabilitar todos los selects
-    matchingPairs.forEach((pair, idx) => {
-        const select = pair.querySelector('select');
-        select.disabled = true;
-    });
-
-    // Verificar y mostrar feedback
-    let todoCorrecto = true;
-    const respuestaEmparejamiento = [];
-    
-    matchingPairs.forEach((pair, idx) => {
-        const select = pair.querySelector('select');
-        const valorSeleccionado = parseInt(select.value);
-        respuestaEmparejamiento.push(valorSeleccionado);
-        
-        const respuestaCorrecta = pregunta.pares[idx].derecha;
-        const respuestaUsuario = derechas[valorSeleccionado];
-        
-        if (respuestaUsuario === respuestaCorrecta) {
-            pair.classList.add('ans-correct');
-            pair.style.backgroundColor = '#e6f4ea';
-        } else {
-            pair.classList.add('ans-wrong');
-            pair.style.backgroundColor = '#fce8e6';
-            todoCorrecto = false;
-            
-            // Mostrar la respuesta correcta
-            const correctoDiv = document.createElement('div');
-            correctoDiv.style.cssText = 'padding: 8px; margin-top: 5px; background: #e6f4ea; border-radius: 6px; font-size: 0.85rem; color: #137333;';
-            correctoDiv.innerHTML = `✓ Correcto: <strong>${respuestaCorrecta}</strong>`;
-            pair.appendChild(correctoDiv);
-        }
-    });
-
-    const divExplicacion = document.createElement('div');
-    divExplicacion.className = 'explanation-feedback';
-    divExplicacion.innerHTML = `<strong>Explicación:</strong> ${pregunta.explicacion}`;
-    cont.appendChild(divExplicacion);
-    
-    respuestasUsuario.push(respuestaEmparejamiento);
-    btnNextQuestion.classList.remove('hidden');
-}
-
 // === 15. BOTÓN SIGUIENTE ===
 btnNextQuestion.addEventListener('click', () => {
     const isStudyMode = document.getElementById('mode-select').value === 'study';
@@ -3865,9 +3835,12 @@ btnNextQuestion.addEventListener('click', () => {
             respuestasUsuario.push([...seleccionesTemporales]);
         } else if (pregunta.tipo === 'emparejamiento') {
             const respuestaEmparejamiento = [];
+            const derechas = pregunta.pares.map(p => p.derecha);
             pregunta.pares.forEach((par, idx) => {
                 const select = document.getElementById(`match-${idx}`);
-                respuestaEmparejamiento.push(parseInt(select.value));
+                const valorTexto = select.value;
+                const indiceValor = derechas.indexOf(valorTexto);
+                respuestaEmparejamiento.push(indiceValor);
             });
             respuestasUsuario.push(respuestaEmparejamiento);
         } else if (pregunta.tipo === 'multiple' && seleccionTemporal !== null) {
