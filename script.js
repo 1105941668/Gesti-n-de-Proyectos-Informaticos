@@ -298,7 +298,7 @@ const bancoPreguntas = [
     "pares": [
       {
         "izquierda": "Inicio",
-        "derecha": "Proyecto alineado a la estrategia corporativa"
+        "derecha": "Elaborar los objetivos del proyecto"
       },
       {
         "izquierda": "Monitoreo y control",
@@ -310,7 +310,7 @@ const bancoPreguntas = [
       },
       {
         "izquierda": "Ejecución",
-        "derecha": "Elaborar los objetivos del proyecto"
+        "derecha": "Proyecto alineado a la estrategia corporativa"
       },
       {
         "izquierda": "Cierre",
@@ -318,7 +318,7 @@ const bancoPreguntas = [
       }
     ],
     "respuesta": 0,
-    "explicacion": "Cada fase del ciclo de vida tiene hitos específicos: Inicio-alineación estratégica, Monitoreo-estado de rendimiento, Planeación-plan autorizado, Ejecución-objetivos elaborados, Cierre-acta de entrega."
+    "explicacion": "Cada fase del ciclo de vida tiene hitos específicos: Inicio-Elaborar los objetivos del proyecto, Monitoreo-Estado de rendimiento, Planeación-Plan de gestión del proyecto autorizado, Ejecución-Proyecto alineado a la estrategia corporativa, Cierre-Acta entrega-recepción."
   },
   //19
   {
