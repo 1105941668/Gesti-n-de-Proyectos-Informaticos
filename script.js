@@ -21,7 +21,7 @@ const db = getFirestore(app);
 const correosDosDispositivos = [
     "dpachecog2@unemi.edu.ec", "htigrer@unemi.edu.ec", "sgavilanezp2@unemi.edu.ec", 
     "jzamoram9@unemi.edu.ec", "fcarrillop@unemi.edu.ec", "naguilarb@unemi.edu.ec", 
-    "kholguinb2@unemi.edu.ec"
+    "kholguinb2@unemi.edu.ec", "iastudillol@unemi.edu.ec"
 ];
 
 const correosUnDispositivo = [
@@ -4053,7 +4053,7 @@ function terminarQuiz() {
     localStorage.removeItem(key);
 
     let aciertos = 0;
-    
+
     preguntasExamen.forEach((p, i) => {
         if (p.tipo === 'multiple') {
             if (respuestasUsuario[i] === p.respuesta) aciertos++;
