@@ -3587,7 +3587,7 @@ function cargarPreguntaEmparejamiento(pregunta, cont) {
         select.dataset.correcta = par.derecha; // ✅ Guardar la respuesta correcta
         select.innerHTML = '<option value="">Seleccione...</option>';
         
-        derechas.forEach((derecha) => {
+        derechas.forEach((derecha, idx) => {
             select.innerHTML += `<option value="${derecha}">${derecha}</option>`; // ✅ Usar el texto como valor
         });
         
@@ -3618,6 +3618,62 @@ function cargarPreguntaEmparejamiento(pregunta, cont) {
         btnConfirmar.onclick = () => {
             btnConfirmar.style.display = 'none';
             mostrarResultadoInmediatoEmparejamiento();
+        };
+        cont.appendChild(btnConfirmar);
+    }
+}
+
+
+// === 12. CARGAR PREGUNTA EMPAREJAMIENTO ===
+function cargarPreguntaEmparejamiento(pregunta, cont) {
+    const isStudyMode = document.getElementById('mode-select').value === 'study';
+    
+    const matchingDiv = document.createElement('div');
+    matchingDiv.className = 'matching-container';
+    
+    // Mezclar las opciones de la derecha
+    const derechas = [...pregunta.pares.map(p => p.derecha)].sort(() => 0.5 - Math.random());
+    
+    pregunta.pares.forEach((par, index) => {
+        const pairDiv = document.createElement('div');
+        pairDiv.className = 'matching-pair';
+        
+        const select = document.createElement('select');
+        select.id = `match-${index}`;
+        select.dataset.correcta = par.derecha; // ✅ Guardar la respuesta correcta
+        select.innerHTML = '<option value="">Seleccione...</option>';
+        
+        derechas.forEach((derecha) => {
+            select.innerHTML += `<option value="${derecha}">${derecha}</option>`; // ✅ Usar el texto como valor
+        });
+        
+        select.addEventListener('change', () => {
+            verificarEmparejamientoCompleto(isStudyMode);
+        });
+        
+        pairDiv.innerHTML = `
+            <div class="matching-left">${par.izquierda}</div>
+            <div class="matching-arrow">→</div>
+            <div class="matching-right"></div>
+        `;
+        
+        pairDiv.querySelector('.matching-right').appendChild(select);
+        matchingDiv.appendChild(pairDiv);
+    });
+    
+    cont.appendChild(matchingDiv);
+    
+    // Agregar botón de confirmar solo en modo estudio
+    if (isStudyMode) {
+        const btnConfirmar = document.createElement('button');
+        btnConfirmar.className = 'btn-primary';
+        btnConfirmar.id = 'btn-confirmar-emparejamiento';
+        btnConfirmar.style.marginTop = '15px';
+        btnConfirmar.style.display = 'none';
+        btnConfirmar.innerHTML = 'Confirmar Respuesta';
+        btnConfirmar.onclick = () => {
+            btnConfirmar.style.display = 'none';
+            validarRespuestaEmparejamiento(); // ✅ NUEVO NOMBRE
         };
         cont.appendChild(btnConfirmar);
     }
@@ -3665,8 +3721,8 @@ function verificarEmparejamiento() {
     return todasCorrectas;
 }
 
-// ✅ Función para mostrar resultado inmediato (modo estudio)
-function mostrarResultadoInmediatoEmparejamiento() {
+// ✅ NUEVO NOMBRE - Función para mostrar resultado inmediato (modo estudio)
+function validarRespuestaEmparejamiento() {
     const selects = document.querySelectorAll('[id^="match-"]');
     const correcto = verificarEmparejamiento();
     
