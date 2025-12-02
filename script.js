@@ -27,7 +27,8 @@ const correosDosDispositivos = [
 const correosUnDispositivo = [
     "cnavarretem4@unemi.edu.ec", "gorellanas2@unemi.edu.ec", "ehidalgoc4@unemi.edu.ec", 
     "lbrionesg3@unemi.edu.ec", "xsalvadorv@unemi.edu.ec", "nbravop4@unemi.edu.ec", 
-    "jmoreirap6@unemi.edu.ec", "jcastrof8@unemi.edu.ec", "csanchezl3@unemi.edu.ec"
+    "jmoreirap6@unemi.edu.ec", "jcastrof8@unemi.edu.ec", "csanchezl3@unemi.edu.ec",
+    "malmachi@unemi.edu.ec"
 ];
 
 const correosPermitidos = [...correosDosDispositivos, ...correosUnDispositivo];
