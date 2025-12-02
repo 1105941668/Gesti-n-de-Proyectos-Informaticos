@@ -119,11 +119,39 @@ button {
 
 .btn-primary:hover { 
     background-color: #166fe5; 
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(24, 119, 242, 0.3);
 }
 
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* ✅ NUEVO: Estilos mejorados para botones secundarios */
 .btn-secondary { 
-    background-color: #f1f3f4; 
-    color: #333; 
+    background-color: #6c757d; 
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+}
+
+.btn-secondary:hover { 
+    background-color: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
 }
 
 #btn-google {
@@ -148,6 +176,16 @@ hr {
     border: 0; 
     border-top: 1px solid #eee; 
     margin: 15px 0; 
+}
+
+/* ✅ NUEVO: Header del quiz con botones */
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
 /* === ESTILOS DEL EXAMEN === */
@@ -425,7 +463,6 @@ hr {
     color: #666;
 }
 
-
 .matching-pair.correct {
     background-color: #d4edda;
     border-left: 4px solid #28a745;
@@ -463,6 +500,7 @@ hr {
     border: 2px solid #dc3545;
 }
 
+/* === ESTILOS PARA ORDENAMIENTO === */
 .ordering-container {
     display: flex;
     flex-direction: column;
@@ -516,6 +554,10 @@ hr {
     cursor: grab;
 }
 
+.ordering-item:active .ordering-handle {
+    cursor: grabbing;
+}
+
 .ordering-item.correct {
     background-color: #e6f4ea;
     border-left: 4px solid #28a745;
@@ -526,6 +568,7 @@ hr {
     border-left: 4px solid #dc3545;
 }
 
+/* Revisión de ordenamiento */
 .review-ordering {
     display: flex;
     flex-direction: column;
@@ -572,6 +615,61 @@ hr {
     line-height: 1.4;
 }
 
+/* ✅ NUEVO: Notificaciones */
+.notification {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 8px;
+    font-weight: 500;
+    z-index: 10000;
+    animation: slideIn 0.3s ease-out;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    max-width: 350px;
+}
+
+.notification-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 2px solid #28a745;
+}
+
+.notification-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 2px solid #dc3545;
+}
+
+.notification-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 2px solid #17a2b8;
+}
+
+/* ✅ NUEVO: Animaciones para notificaciones */
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+
 /* === RESPONSIVE === */
 @media (max-width: 600px) {
     header h1 {
@@ -588,6 +686,21 @@ hr {
         margin-top: 60px;
     }
     
+    .quiz-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .quiz-header > div {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .btn-secondary {
+        font-size: 0.85rem;
+        padding: 8px 16px;
+    }
+    
     .matching-pair {
         grid-template-columns: 1fr;
         gap: 5px;
@@ -596,5 +709,26 @@ hr {
     .matching-arrow {
         transform: rotate(90deg);
         margin: 5px 0;
+    }
+    
+    .notification {
+        right: 10px;
+        left: 10px;
+        max-width: calc(100% - 20px);
+    }
+    
+    .ordering-item {
+        padding: 12px;
+        gap: 8px;
+    }
+    
+    .ordering-number {
+        min-width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
+    }
+    
+    .ordering-text {
+        font-size: 0.85rem;
     }
 }

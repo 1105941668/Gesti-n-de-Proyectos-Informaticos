@@ -72,14 +72,32 @@
         <div style="margin-top: 20px;">
             <p>Hola, <span id="user-display" style="font-weight: bold; color: #1a73e8;">Usuario</span>.</p>
             <p style="color: #28a745; font-size: 0.9rem;"><i class="fa-solid fa-shield-halved"></i> Dispositivo verificado</p>
+            
+            <!-- ✅ NUEVO: Botón cargar progreso -->
+            <button id="btn-load-progress" class="btn-secondary" style="display: none; margin-bottom: 10px; width: 100%;">
+                <i class="fa-solid fa-folder-open"></i> 📂 Cargar Progreso Guardado
+            </button>
+            
             <button id="btn-start" class="btn-primary">Empezar</button>
         </div>
     </div>
 
     <div class="container hidden" id="quiz-screen" style="max-width: 700px;">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
-            <span id="timer-display" style="color: #ea4335; font-size: 1.2rem; font-weight: bold;">00:00</span>
-            <span id="progress-display" style="font-weight: 600;">Pregunta 1</span>
+        <!-- ✅ NUEVO: Header con botones de guardar y volver -->
+        <div class="quiz-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <span id="timer-display" style="color: #ea4335; font-size: 1.2rem; font-weight: bold;">00:00</span>
+                <span id="progress-display" style="font-weight: 600;">Pregunta 1</span>
+            </div>
+            
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button id="btn-save-progress" class="btn-secondary" style="padding: 8px 16px; font-size: 0.85rem; width: auto;">
+                    <i class="fa-solid fa-floppy-disk"></i> 💾 Guardar
+                </button>
+                <button id="btn-home" class="btn-secondary" style="padding: 8px 16px; font-size: 0.85rem; width: auto;">
+                    <i class="fa-solid fa-house"></i> 🏠 Inicio
+                </button>
+            </div>
         </div>
         
         <div class="question-box">
@@ -101,17 +119,26 @@
         <p>Tu calificación es:</p>
         <h1 id="score-final" style="font-size: 3rem; color: #1a73e8; margin: 10px 0;">0/0</h1>
         
-        <button id="btn-review" class="btn-secondary" style="margin-bottom: 10px; border: 1px solid #1a73e8; color: #1a73e8;">
-            <i class="fa-solid fa-list-check"></i> Revisar Respuestas
-        </button>
-        
-        <button onclick="location.reload()" class="btn-primary">Volver al Inicio</button>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <button id="btn-review" class="btn-secondary" style="border: 1px solid #1a73e8; color: #1a73e8;">
+                <i class="fa-solid fa-list-check"></i> Revisar Respuestas
+            </button>
+            
+            <!-- ✅ NUEVO: Botón volver al inicio -->
+            <button id="btn-home-results" class="btn-primary">
+                <i class="fa-solid fa-house"></i> Volver al Inicio
+            </button>
+        </div>
     </div>
 
     <div class="container hidden" id="review-screen" style="max-width: 800px; text-align: left;">
         <h2 style="text-align: center; color: #1a73e8;">Revisión</h2>
         <div id="review-container" style="max-height: 60vh; overflow-y: auto; padding-right: 10px;"></div>
-        <button onclick="location.reload()" class="btn-primary" style="margin-top: 20px;">Finalizar</button>
+        
+        <!-- ✅ NUEVO: Botón volver al inicio -->
+        <button id="btn-home-review" class="btn-primary" style="margin-top: 20px;">
+            <i class="fa-solid fa-house"></i> Volver al Inicio
+        </button>
     </div>
 
     <script type="module" src="script.js?v=1"></script>
