@@ -3568,7 +3568,6 @@ function cargarPreguntaSeleccionMultiple(pregunta, cont) {
         cont.appendChild(btnConfirmar);
     }
 }
-
 // === 12. CARGAR PREGUNTA EMPAREJAMIENTO ===
 function cargarPreguntaEmparejamiento(pregunta, cont) {
     const isStudyMode = document.getElementById('mode-select').value === 'study';
@@ -3576,6 +3575,7 @@ function cargarPreguntaEmparejamiento(pregunta, cont) {
     const matchingDiv = document.createElement('div');
     matchingDiv.className = 'matching-container';
     
+    // Mezclar las opciones de la derecha
     const derechas = [...pregunta.pares.map(p => p.derecha)].sort(() => 0.5 - Math.random());
     
     pregunta.pares.forEach((par, index) => {
@@ -3584,9 +3584,11 @@ function cargarPreguntaEmparejamiento(pregunta, cont) {
         
         const select = document.createElement('select');
         select.id = `match-${index}`;
+        select.dataset.correcta = par.derecha; // ✅ Guardar la respuesta correcta
         select.innerHTML = '<option value="">Seleccione...</option>';
+        
         derechas.forEach((derecha, idx) => {
-            select.innerHTML += `<option value="${idx}">${derecha}</option>`;
+            select.innerHTML += `<option value="${derecha}">${derecha}</option>`; // ✅ Usar el texto como valor
         });
         
         select.addEventListener('change', () => {
@@ -3622,7 +3624,6 @@ function cargarPreguntaEmparejamiento(pregunta, cont) {
 }
 
 function verificarEmparejamientoCompleto(isStudyMode = false) {
-    const pregunta = preguntasExamen[indiceActual];
     const selects = document.querySelectorAll('[id^="match-"]');
     let todosCompletos = true;
     
@@ -3645,6 +3646,60 @@ function verificarEmparejamientoCompleto(isStudyMode = false) {
             btnNextQuestion.classList.add('hidden');
         }
     }
+}
+
+// ✅ Función para verificar si el emparejamiento es correcto
+function verificarEmparejamiento() {
+    const selects = document.querySelectorAll('[id^="match-"]');
+    let todasCorrectas = true;
+    
+    selects.forEach(select => {
+        const seleccionada = select.value;
+        const correcta = select.dataset.correcta;
+        
+        if (seleccionada !== correcta) {
+            todasCorrectas = false;
+        }
+    });
+    
+    return todasCorrectas;
+}
+
+// ✅ Función para mostrar resultado inmediato (modo estudio)
+function mostrarResultadoInmediatoEmparejamiento() {
+    const selects = document.querySelectorAll('[id^="match-"]');
+    const correcto = verificarEmparejamiento();
+    
+    // Deshabilitar todos los selects
+    selects.forEach(select => {
+        select.disabled = true;
+        const pairDiv = select.closest('.matching-pair');
+        const correcta = select.dataset.correcta;
+        
+        if (select.value === correcta) {
+            pairDiv.classList.add('correct');
+        } else {
+            pairDiv.classList.add('incorrect');
+            // Mostrar la respuesta correcta
+            const rightDiv = pairDiv.querySelector('.matching-right');
+            rightDiv.innerHTML += `<div class="correct-answer">Correcta: ${correcta}</div>`;
+        }
+    });
+    
+    // Mostrar mensaje general
+    const pregunta = preguntasExamen[indiceActual];
+    const feedback = document.createElement('div');
+    feedback.className = `feedback-box ${correcto ? 'correct' : 'incorrect'}`;
+    feedback.innerHTML = `
+        <strong>${correcto ? '¡Correcto!' : 'Incorrecto'}</strong>
+        <p>${pregunta.explicacion || ''}</p>
+    `;
+    
+    const cont = document.getElementById('pregunta-contenedor');
+    cont.appendChild(feedback);
+    
+    // Mostrar botón siguiente
+    btnNextQuestion.classList.remove('hidden');
 }
 
 // === 13. SELECCIONAR OPCIÓN ===
