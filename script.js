@@ -3587,7 +3587,7 @@ function cargarPreguntaEmparejamiento(pregunta, cont) {
         select.dataset.correcta = par.derecha; // ✅ Guardar la respuesta correcta
         select.innerHTML = '<option value="">Seleccione...</option>';
         
-        derechas.forEach((derecha, idx) => {
+        derechas.forEach((derecha) => {
             select.innerHTML += `<option value="${derecha}">${derecha}</option>`; // ✅ Usar el texto como valor
         });
         
