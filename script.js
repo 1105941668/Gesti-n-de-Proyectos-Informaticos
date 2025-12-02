@@ -1,6 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+import { deleteDoc,serverTimestamp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
 
 // === 1. CONFIGURACIÓN FIREBASE ===
 const firebaseConfig = {
@@ -4045,12 +4047,10 @@ function iniciarReloj() {
 // === 17. TERMINAR QUIZ ===
 function terminarQuiz() {
     clearInterval(intervaloTiempo);
-    detenerAutoGuardado(); // ✅ AGREGAR ESTA LÍNEA
+    detenerAutoGuardado();
     
-    // Eliminar progreso guardado
-    const modo = document.getElementById('mode-select').value;
-    const key = `progreso_${modo}_${auth.currentUser.email}`;
-    localStorage.removeItem(key);
+    // Eliminar progreso guardado al terminar
+    eliminarProgreso();
 
     let aciertos = 0;
 
@@ -4092,6 +4092,39 @@ function terminarQuiz() {
         document.getElementById('btn-review').classList.remove('hidden');
     }
 }
+
+// Verificar progreso al cargar la app (después de autenticación)
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        if (correosPermitidos.includes(user.email)) {
+            const titulo = document.querySelector('h2');
+            if(titulo) titulo.innerText = "Verificando Dispositivo...";
+            
+            const dispositivoValido = await validarDispositivo(user);
+            
+            if (dispositivoValido) {
+                authScreen.classList.add('hidden');
+                setupScreen.classList.remove('hidden');
+                btnLogout.classList.remove('hidden');
+                document.getElementById('user-display').innerText = user.email;
+                if(titulo) titulo.innerText = "Bienvenido";
+                
+                // ✅ AGREGAR: Verificar progreso guardado
+                await verificarProgresoGuardado();
+            }
+        } else {
+            alert("ACCESO RESTRINGIDO: Tu correo no está autorizado.");
+            signOut(auth);
+        }
+    } else {
+        authScreen.classList.remove('hidden');
+        setupScreen.classList.add('hidden');
+        quizScreen.classList.add('hidden');
+        resultScreen.classList.add('hidden');
+        reviewScreen.classList.add('hidden');
+        btnLogout.classList.add('hidden');
+    }
+});
 
 // === 18. REVISIÓN ===
 document.getElementById('btn-review').addEventListener('click', () => {
@@ -4221,11 +4254,12 @@ document.getElementById('btn-review').addEventListener('click', () => {
     });
 });
 
-// === GUARDAR Y CARGAR PROGRESO ===
+// === GUARDAR Y CARGAR PROGRESO EN FIREBASE ===
 
-function guardarProgreso() {
+async function guardarProgreso() {
     const modo = document.getElementById('mode-select').value;
     const tiempo = document.getElementById('time-select').value;
+    const email = auth.currentUser.email;
     
     const progreso = {
         modo: modo,
@@ -4234,60 +4268,165 @@ function guardarProgreso() {
         preguntasExamen: preguntasExamen,
         indiceActual: indiceActual,
         respuestasUsuario: respuestasUsuario,
-        fecha: new Date().toISOString()
+        fecha: new Date().toISOString(),
+        ultimaActualizacion: serverTimestamp()
     };
     
-    const key = `progreso_${modo}_${auth.currentUser.email}`;
-    localStorage.setItem(key, JSON.stringify(progreso));
-    
-    // Mostrar confirmación
-    mostrarNotificacion('✅ Progreso guardado exitosamente', 'success');
+    try {
+        // Guardar en Firebase
+        const docRef = doc(db, "progresos", `${email}_${modo}`);
+        await setDoc(docRef, progreso);
+        
+        // También guardar en localStorage como respaldo
+        const key = `progreso_${modo}_${email}`;
+        localStorage.setItem(key, JSON.stringify(progreso));
+        
+        mostrarNotificacion('✅ Progreso guardado exitosamente', 'success');
+        console.log('📝 Progreso guardado en Firebase y localStorage');
+    } catch (error) {
+        console.error('Error al guardar progreso:', error);
+        mostrarNotificacion('❌ Error al guardar progreso', 'error');
+    }
 }
 
-function cargarProgreso() {
+async function cargarProgreso() {
     const modo = document.getElementById('mode-select').value;
-    const key = `progreso_${modo}_${auth.currentUser.email}`;
-    const progreso = localStorage.getItem(key);
+    const email = auth.currentUser.email;
+    const docRef = doc(db, "progresos", `${email}_${modo}`);
     
-    if (!progreso) {
-        mostrarNotificacion('❌ No hay progreso guardado para este modo', 'error');
-        return;
+    try {
+        // Intentar cargar desde Firebase primero
+        const docSnap = await getDoc(docRef);
+        
+        let datos = null;
+        
+        if (docSnap.exists()) {
+            datos = docSnap.data();
+            console.log('📂 Progreso cargado desde Firebase');
+        } else {
+            // Si no está en Firebase, intentar desde localStorage
+            const key = `progreso_${modo}_${email}`;
+            const progresoLocal = localStorage.getItem(key);
+            
+            if (progresoLocal) {
+                datos = JSON.parse(progresoLocal);
+                console.log('📂 Progreso cargado desde localStorage (respaldo)');
+            }
+        }
+        
+        if (!datos) {
+            mostrarNotificacion('❌ No hay progreso guardado para este modo', 'error');
+            return;
+        }
+        
+        if (!confirm('¿Deseas cargar el progreso guardado? Esto reemplazará cualquier examen en curso.')) {
+            return;
+        }
+        
+        // Restaurar datos
+        preguntasExamen = datos.preguntasExamen;
+        indiceActual = datos.indiceActual;
+        respuestasUsuario = datos.respuestasUsuario;
+        tiempoRestante = datos.tiempoRestante;
+        
+        // Configurar tiempo
+        document.getElementById('time-select').value = datos.tiempo;
+        document.getElementById('mode-select').value = datos.modo;
+        
+        // Iniciar
+        if (datos.tiempo !== 'infinity' && tiempoRestante > 0) {
+            iniciarReloj();
+        } else if (datos.tiempo === 'infinity') {
+            document.getElementById('timer-display').innerText = "--:--";
+        }
+        
+        setupScreen.classList.add('hidden');
+        quizScreen.classList.remove('hidden');
+        cargarPregunta();
+        
+        const fecha = new Date(datos.fecha).toLocaleString('es-ES');
+        mostrarNotificacion(`✅ Progreso cargado: Pregunta ${indiceActual + 1} de ${preguntasExamen.length} (${fecha})`, 'success');
+    } catch (error) {
+        console.error('Error al cargar progreso:', error);
+        mostrarNotificacion('❌ Error al cargar progreso', 'error');
     }
+}
+
+async function verificarProgresoGuardado() {
+    const modo = document.getElementById('mode-select').value;
+    const email = auth.currentUser?.email;
     
-    if (!confirm('¿Deseas cargar el progreso guardado? Esto reemplazará cualquier examen en curso.')) {
-        return;
+    if (!email) return;
+    
+    const btnLoad = document.getElementById('btn-load-progress');
+    const docRef = doc(db, "progresos", `${email}_${modo}`);
+    
+    try {
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+            const datos = docSnap.data();
+            const fecha = new Date(datos.fecha).toLocaleString('es-ES', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            btnLoad.style.display = 'block';
+            btnLoad.innerHTML = `📂 Cargar Progreso<br><small style="font-size: 0.75rem; font-weight: normal;">Pregunta ${datos.indiceActual + 1}/${datos.preguntasExamen.length} - ${fecha}</small>`;
+        } else {
+            // Verificar localStorage como respaldo
+            const key = `progreso_${modo}_${email}`;
+            const progresoLocal = localStorage.getItem(key);
+            
+            if (progresoLocal) {
+                const datos = JSON.parse(progresoLocal);
+                const fecha = new Date(datos.fecha).toLocaleString('es-ES', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                btnLoad.style.display = 'block';
+                btnLoad.innerHTML = `📂 Cargar Progreso (Local)<br><small style="font-size: 0.75rem; font-weight: normal;">Pregunta ${datos.indiceActual + 1}/${datos.preguntasExamen.length} - ${fecha}</small>`;
+            } else {
+                btnLoad.style.display = 'none';
+            }
+        }
+    } catch (error) {
+        console.error('Error al verificar progreso:', error);
+        btnLoad.style.display = 'none';
     }
+}
+
+async function eliminarProgreso() {
+    const modo = document.getElementById('mode-select').value;
+    const email = auth.currentUser?.email;
     
-    const datos = JSON.parse(progreso);
+    if (!email) return;
     
-    // Restaurar datos
-    preguntasExamen = datos.preguntasExamen;
-    indiceActual = datos.indiceActual;
-    respuestasUsuario = datos.respuestasUsuario;
-    tiempoRestante = datos.tiempoRestante;
-    
-    // Configurar tiempo
-    document.getElementById('time-select').value = datos.tiempo;
-    document.getElementById('mode-select').value = datos.modo;
-    
-    // Iniciar
-    if (datos.tiempo !== 'infinity' && tiempoRestante > 0) {
-        iniciarReloj();
-    } else if (datos.tiempo === 'infinity') {
-        document.getElementById('timer-display').innerText = "--:--";
+    try {
+        // Eliminar de Firebase
+        const docRef = doc(db, "progresos", `${email}_${modo}`);
+        await deleteDoc(docRef);
+        
+        // Eliminar de localStorage
+        const key = `progreso_${modo}_${email}`;
+        localStorage.removeItem(key);
+        
+        console.log('🗑️ Progreso eliminado de Firebase y localStorage');
+    } catch (error) {
+        console.error('Error al eliminar progreso:', error);
     }
-    
-    setupScreen.classList.add('hidden');
-    quizScreen.classList.remove('hidden');
-    cargarPregunta();
-    
-    mostrarNotificacion(`✅ Progreso cargado: Pregunta ${indiceActual + 1} de ${preguntasExamen.length}`, 'success');
 }
 
 function volverAlInicio() {
     if (confirm('¿Estás seguro de volver al inicio? Se perderá el progreso no guardado.')) {
         // Detener temporizador
         clearInterval(intervaloTiempo);
+        detenerAutoGuardado();
         
         // Resetear variables
         preguntasExamen = [];
@@ -4304,6 +4443,9 @@ function volverAlInicio() {
         
         // Mostrar pantalla de setup
         setupScreen.classList.remove('hidden');
+        
+        // Verificar si hay progreso guardado
+        verificarProgresoGuardado();
     }
 }
 
@@ -4312,32 +4454,6 @@ function mostrarNotificacion(mensaje, tipo = 'info') {
     const notif = document.createElement('div');
     notif.className = `notification notification-${tipo}`;
     notif.textContent = mensaje;
-    notif.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 15px 25px;
-        border-radius: 8px;
-        font-weight: 500;
-        z-index: 10000;
-        animation: slideIn 0.3s ease-out;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    `;
-    
-    // Colores según tipo
-    if (tipo === 'success') {
-        notif.style.backgroundColor = '#d4edda';
-        notif.style.color = '#155724';
-        notif.style.border = '2px solid #28a745';
-    } else if (tipo === 'error') {
-        notif.style.backgroundColor = '#f8d7da';
-        notif.style.color = '#721c24';
-        notif.style.border = '2px solid #dc3545';
-    } else {
-        notif.style.backgroundColor = '#d1ecf1';
-        notif.style.color = '#0c5460';
-        notif.style.border = '2px solid #17a2b8';
-    }
     
     document.body.appendChild(notif);
     
@@ -4346,23 +4462,6 @@ function mostrarNotificacion(mensaje, tipo = 'info') {
         notif.style.animation = 'slideOut 0.3s ease-out';
         setTimeout(() => notif.remove(), 300);
     }, 3000);
-}
-
-function verificarProgresoGuardado() {
-    const modo = document.getElementById('mode-select').value;
-    const key = `progreso_${modo}_${auth.currentUser.email}`;
-    const progreso = localStorage.getItem(key);
-    
-    const btnLoad = document.getElementById('btn-load-progress');
-    
-    if (progreso) {
-        const datos = JSON.parse(progreso);
-        const fecha = new Date(datos.fecha).toLocaleString('es-ES');
-        btnLoad.style.display = 'block';
-        btnLoad.innerHTML = `📂 Cargar Progreso (${datos.indiceActual + 1}/${datos.preguntasExamen.length} - ${fecha})`;
-    } else {
-        btnLoad.style.display = 'none';
-    }
 }
 
 // === EVENTOS DE LOS BOTONES ===
@@ -4381,14 +4480,7 @@ document.getElementById('btn-home-review').addEventListener('click', volverAlIni
 // Verificar progreso guardado al cambiar modo
 document.getElementById('mode-select').addEventListener('change', verificarProgresoGuardado);
 
-// Verificar al cargar
-window.addEventListener('load', () => {
-    if (auth.currentUser) {
-        verificarProgresoGuardado();
-    }
-});
-
-// Auto-guardar cada 2 minutos (opcional)
+// === AUTO-GUARDADO ===
 let autoSaveInterval;
 
 function iniciarAutoGuardado() {
@@ -4396,7 +4488,7 @@ function iniciarAutoGuardado() {
     autoSaveInterval = setInterval(() => {
         if (preguntasExamen.length > 0 && indiceActual < preguntasExamen.length) {
             guardarProgreso();
-            console.log('📝 Auto-guardado realizado');
+            console.log('💾 Auto-guardado realizado');
         }
     }, 120000); // Cada 2 minutos
 }
@@ -4407,17 +4499,10 @@ function detenerAutoGuardado() {
 
 // Iniciar auto-guardado cuando comienza el quiz
 const btnStartOriginal = document.getElementById('btn-start');
-btnStartOriginal.addEventListener('click', () => {
+const oldStartHandler = btnStartOriginal.onclick;
+btnStartOriginal.onclick = function() {
+    if (oldStartHandler) oldStartHandler.call(this);
     setTimeout(() => {
         iniciarAutoGuardado();
     }, 1000);
-});
-
-// Detener auto-guardado al terminar
-function terminarQuizConAutoGuardado() {
-    detenerAutoGuardado();
-    // Eliminar progreso guardado al terminar
-    const modo = document.getElementById('mode-select').value;
-    const key = `progreso_${modo}_${auth.currentUser.email}`;
-    localStorage.removeItem(key);
-}
+};
